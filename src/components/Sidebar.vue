@@ -8,7 +8,7 @@
             </ul>
           <div class="sidebar-grouptitle">测试管理</div>
           <ul class="sidebar-menu">
-            <li><a href="/report/LiveStreamTestReport.html">查看测试报告</a></li>
+            <li><a href="/wom/report/womReport.html">查看测试报告</a></li>
           </ul>
         </div>
     </div>

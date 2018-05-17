@@ -1,70 +1,73 @@
 <template>
-    <div class="page-content">
-        <div class="content-nav">
-            会话管理 &gt; 创建视频会话
-        </div>
-        <form @submit.prevent="createSession" @reset.prevent="resetSession">
-            <fieldset>
-                <legend>会话信息</legend>
-                <table class="formtable">
-                    <tbody>
-                    <tr>
-                        <td>类型:</td>
-                        <td>
-                            <select v-model="choosenSessionType">
-                                <option v-for="type, index in meetingType" :value="index">{{type}}</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <template v-if="choosenSessionType === 0">
-                        <tr>
-                            <td>视频流地址:</td>
-                            <td>
-                                <input type="text" v-model="streamUrl" required placeholder="rtsp://*/id=*">
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td>Video:</td>
-                            <td>
-                                <input type="checkbox" v-model="video"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Audio:</td>
-                            <td>
-                                <input type="checkbox" v-model="audio"/>
-                            </td>
-                        </tr>
-                    </template>
-
-                    <template v-if="choosenSessionType === 1">
-                        <tr>
-                            <td>会话主题:</td>
-                            <td>
-                                <input id="capacity" type="text" v-model="meetingname" required placeholder="例如：流媒体" maxlength="20">
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>备注：</td>
-                            <td>
-                                <textarea id="description" v-model="description"  maxlength="200" rows="5" cols="60" required placeholder="200字以内的文字描述"></textarea>
-                            </td>
-                        </tr>
-                    </template>
-
-                    <tr>
-                        <td colspan="2" class="command">
-                            <input type="submit" value="创建" class="clickbutton">
-                            <input type="reset" value="重置" class="clickbutton">
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </fieldset>
-        </form>
+  <div class="page-content">
+    <div class="content-nav">
+      直播管理 &gt; 创建视频直播
     </div>
+    <form @submit.prevent="createSession" @reset.prevent="resetSession">
+      <fieldset>
+        <legend>直播信息</legend>
+        <table class="formtable">
+          <tbody>
+          <tr>
+            <td>类型:</td>
+            <td>
+              <select v-model="choosenSessionType">
+                <option v-for="type, index in meetingType" :value="index">{{type}}</option>
+              </select>
+            </td>
+          </tr>
+          <template v-if="choosenSessionType === 0">
+            <tr>
+              <td>名称:</td>
+              <td>
+                <input type="text" v-model="name" required maxlength="20">
+              </td>
+            </tr>
+            <tr>
+              <td>直播源地址:</td>
+              <td>
+                <input type="text" v-model="sourceUrl" required placeholder="rtsp://*/id=*">
+              </td>
+
+            </tr>
+
+            <tr>
+              <td>协议类型:</td>
+              <td>
+                <select v-model="protocol">
+                  <option v-for="type, index in protocolType" :value="index">{{type}}</option>
+                </select>
+              </td>
+            </tr>
+          </template>
+
+          <template v-if="choosenSessionType === 1">
+            <tr>
+              <td>会话主题:</td>
+              <td>
+                <input id="capacity" type="text" v-model="meetingname" required placeholder="例如：流媒体" maxlength="20">
+              </td>
+            </tr>
+
+            <tr>
+              <td>备注：</td>
+              <td>
+                <textarea id="description" v-model="description"  maxlength="200" rows="5" cols="60" required placeholder="200字以内的文字描述"></textarea>
+              </td>
+            </tr>
+          </template>
+
+          <tr>
+            <td colspan="2" class="command">
+              <input type="submit" value="创建" class="clickbutton">
+              <input type="reset" value="重置" class="clickbutton">
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -76,12 +79,12 @@
                 meetingname: '',
                 description: '',
                 groupId: 0,
-                meetingType: ['单点视频会话', '多点视频会话', 'OneOnOne'],
+                meetingType: ['Live Stream'],
+                protocolType: ['rtspclient','rtspserver'],
                 choosenSessionType: undefined,
-                streamUrl: '',
-                audio: false,
-                video: true,
-                wsConnection: null
+                sourceUrl: 'rtsp://172.16.66.65/id=1',
+                protocol: 0,
+                name: null
             }
         },
         computed: {
@@ -95,6 +98,22 @@
         },
         methods: {
 
+          createSession: function () {
+            let self = this;
+            axios.post('/wom/livestream', {
+              "source" : {
+                "name" : this.name,
+                "protocol" : this.protocolType[this.protocol],
+                "url" : this.sourceUrl
+              }
+            }).then(res => {
+              self.$router.push({
+                name: 'Query'
+              });
+            }).catch(err => {
+                console.log(err);
+            })
+          }
         }
     }
 </script>
