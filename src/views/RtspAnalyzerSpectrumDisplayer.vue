@@ -20,8 +20,8 @@
         }
         return {
           tooltip: false,
-          width: '1200px',
-          height: '1000px',
+          width: '1800px',
+          height: '800px',
           socket: null,
           audienceId: null,
           liveStreamId: null,
@@ -37,7 +37,8 @@
       },
       created() {
         this.audienceId = this.$route.params.id;
-
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
         this.createSocketIo();
       },
       methods: {
@@ -64,7 +65,7 @@
             let array = [];
             let rv = {};
             for (let i = 0; i < arr.length; ++i) {
-              if (arr[i] !== undefined) rv[i] = arr[i];
+              if (arr[i] !== undefined) rv[i] = arr[i] + 60;
             }
             array.push(rv);
             return array;
